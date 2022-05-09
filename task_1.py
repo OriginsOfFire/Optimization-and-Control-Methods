@@ -31,8 +31,3 @@ def get_inv(A, A_inv, x):
             second = Q[j][i] * A_inv[i][k]
             res[j][k] = first + second if j != k else first
     return res
-
-
-A = np.array([[1, -1, 0], [0, 1, 0], [0, 0, 1]])
-A_inv = np.array([[1, 1, 0], [0, 1, 0], [0, 0, 1]])
-x = np.array([1, 0, 1])
