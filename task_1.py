@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def get_inv(A, A_inv, x):
     i = len(x) - 1
     # Замена i-го столбца на вектор-столбец x
