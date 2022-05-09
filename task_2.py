@@ -14,30 +14,37 @@ A = np.array([
 x = np.array([0, 0, 1, 3, 2])
 B = np.array([2, 3, 4])
 
+# Строим базисную матрицу
+def get_basis(A, a_tran, B):
+    A_b = np.zeros((A.shape[0], len(B)))
+    i = 0
+    for index in B:
+        A_b[i] = a_tran[index]
+        i += 1
+    return A_b.transpose()
+
+# Основная фаза симплекс метода
 def simplex_method(c, A, x, B):
     #TODO: add matrix inversion method from lab 1
     while True:
-        A_b = np.zeros((A.shape[0], len(B)))
         a_tran = A.transpose()
-        i = 0
-        for index in B:
-            A_b[i] = a_tran[index]
-            i += 1
-        A_b = A_b.transpose()
+        A_b = get_basis(A, a_tran, B)
 
+        # Получаем матрицу, обратную к базисной, и вектор базисных компонент 
         A_b_inv = np.linalg.inv(A_b)
 
         i = 0
-        c_b = np.asarray([0 for _ in B])
+        c_b = np.asarray([0 for _ in B])    
         for index in B:
             c_b[i] = c[index]
             i += 1
 
 
+        # Находим векторы потенциалов и оценок
         u_t = np.dot(c_b, A_b_inv)
-
         delta = np.dot(u_t, A) - c;
 
+        # Проверка текущего плана на оптимальность
         neg_delta, j0 = None, None
         for i in range(len(delta)):
             if delta[i] < 0:
@@ -45,9 +52,9 @@ def simplex_method(c, A, x, B):
                 j0 = i
                 break
         if neg_delta is None:
-            print(f'{x} is an optimal plan with basis {B}')
             return x, B
 
+        # Находим векторы z и Θ
         z = np.dot(A_b_inv, a_tran[j0])
 
         theta = np.zeros(len(z))
@@ -57,11 +64,13 @@ def simplex_method(c, A, x, B):
             else:
                 theta[index] = x[B[index]] / z[index]
 
+        # Проверка ограниченности целевой функции
         theta_0 = min(theta)
         if theta_0 == inf:
             print('Target function is not limited!')
             return None
 
+        # Преобразование базисного допустимого плана
         k = np.argmin(theta)
         j_star = B[k]
         B[k] = j0
@@ -71,3 +80,4 @@ def simplex_method(c, A, x, B):
             if i != k:
                 x[B[i]] -= theta_0 * z[i]
         x[j_star] = 0
+    
