@@ -44,7 +44,6 @@ def get_basis_plan(c, A, b):
     while True:
         # Шаг 7. Проверка допустимости текущего базисного плана   
         basis = [j <= n for j in B]
-        print(basis)
         if all(basis):
             print('B is good basis plan')
             return x, B
