@@ -4,13 +4,22 @@ from cmath import inf
 from task_1 import get_inv
 
 # Строим базисную матрицу
-def get_basis(A, a_tran, B):
+def get_basis_matrix(A, a_tran, B):
     A_b = np.zeros((A.shape[0], len(B)))
     i = 0
     for index in B:
         A_b[i] = a_tran[index]
         i += 1
     return A_b.transpose()
+
+# Строим базисный вектор
+def get_basis_vector(c, B):
+    i = 0
+    c_b = [0 for _ in B]
+    for index in B:
+            c_b[i] = c[index]
+            i += 1
+    return c_b
 
 # Основная фаза симплекс метода
 def simplex_method(c, A, x, B):
@@ -19,16 +28,13 @@ def simplex_method(c, A, x, B):
     while True:
         # Шаги 1-2. Получаем матрицу, обратную к базисной, и вектор базисных компонент 
         if count == 0:
-            A_b = get_basis(A, a_tran, B)
+            A_b = get_basis_matrix(A, a_tran, B)
             A_b_inv = np.linalg.inv(A_b)
         else:
             A_b_inv = get_inv(A_b, A_b_inv, A[k])
 
         i = 0
-        c_b = np.asarray([0 for _ in B])    
-        for index in B:
-            c_b[i] = c[index]
-            i += 1
+        c_b = get_basis_vector(c, B)
 
         # Шаги 3-4. Находим векторы потенциалов и оценок
         u_t = np.dot(c_b, A_b_inv)

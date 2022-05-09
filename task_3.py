@@ -1,6 +1,6 @@
 import numpy as np
 
-from task_2 import simplex_method, get_basis
+from task_2 import simplex_method, get_basis_matrix
 
 
 c = np.array([1, 0, 0])
@@ -30,7 +30,7 @@ def get_basis_plan(c, A, b):
     # Шаг 4. Решим вспомогательную задачу основной фазой симплекс-метода
     x, B = simplex_method(c_dashed, a_dashed, x_dashed, B)
     a_tran = a_dashed.transpose()
-    a_basis_inv = np.linalg.inv(get_basis(a_dashed, a_tran, B))
+    a_basis_inv = np.linalg.inv(get_basis_matrix(a_dashed, a_tran, B))
     print(a_basis_inv)
 
     # Шаг 5. Проверка условия совместности
