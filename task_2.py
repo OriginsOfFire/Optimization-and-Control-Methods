@@ -3,17 +3,6 @@ from cmath import inf
 
 from task_1 import get_inv
 
-
-c = np.array([1, 1, 0, 0, 0])
-A = np.array([
-    [-1, 1, 1, 0, 0],
-    [1, 0, 0, 1, 0],
-    [0, 1, 0, 0, 1]
-])
-
-x = np.array([0, 0, 1, 3, 2])
-B = np.array([2, 3, 4])
-
 # Строим базисную матрицу
 def get_basis(A, a_tran, B):
     A_b = np.zeros((A.shape[0], len(B)))
@@ -25,20 +14,21 @@ def get_basis(A, a_tran, B):
 
 # Основная фаза симплекс метода
 def simplex_method(c, A, x, B):
-    #TODO: add matrix inversion method from lab 1
+    count, A_b = 0, None
+    a_tran = A.transpose()
     while True:
-        a_tran = A.transpose()
-        A_b = get_basis(A, a_tran, B)
-
         # Получаем матрицу, обратную к базисной, и вектор базисных компонент 
-        A_b_inv = np.linalg.inv(A_b)
+        if count == 0:
+            A_b = get_basis(A, a_tran, B)
+            A_b_inv = np.linalg.inv(A_b)
+        else:
+            A_b_inv = get_inv(A_b, A_b_inv, A[k])
 
         i = 0
         c_b = np.asarray([0 for _ in B])    
         for index in B:
             c_b[i] = c[index]
             i += 1
-
 
         # Находим векторы потенциалов и оценок
         u_t = np.dot(c_b, A_b_inv)
@@ -80,4 +70,3 @@ def simplex_method(c, A, x, B):
             if i != k:
                 x[B[i]] -= theta_0 * z[i]
         x[j_star] = 0
-    
