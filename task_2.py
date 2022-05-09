@@ -17,7 +17,7 @@ def simplex_method(c, A, x, B):
     count, A_b = 0, None
     a_tran = A.transpose()
     while True:
-        # Получаем матрицу, обратную к базисной, и вектор базисных компонент 
+        # Шаги 1-2. Получаем матрицу, обратную к базисной, и вектор базисных компонент 
         if count == 0:
             A_b = get_basis(A, a_tran, B)
             A_b_inv = np.linalg.inv(A_b)
@@ -30,13 +30,14 @@ def simplex_method(c, A, x, B):
             c_b[i] = c[index]
             i += 1
 
-        # Находим векторы потенциалов и оценок
+        # Шаги 3-4. Находим векторы потенциалов и оценок
         u_t = np.dot(c_b, A_b_inv)
         delta = np.dot(u_t, A) - c;
 
-        # Проверка текущего плана на оптимальность
+        # Шаг 5. Проверка текущего плана на оптимальность
         neg_delta, j0 = None, None
         for i in range(len(delta)):
+            # Шаг 6. Поиск отрицательной компоненты в векторе оценок
             if delta[i] < 0:
                 neg_delta = delta[i]
                 j0 = i
@@ -44,7 +45,7 @@ def simplex_method(c, A, x, B):
         if neg_delta is None:
             return x, B
 
-        # Находим векторы z и Θ
+        # Шаги 7-8. Находим векторы z и Θ
         z = np.dot(A_b_inv, a_tran[j0])
 
         theta = np.zeros(len(z))
@@ -54,13 +55,13 @@ def simplex_method(c, A, x, B):
             else:
                 theta[index] = x[B[index]] / z[index]
 
-        # Проверка ограниченности целевой функции
+        # Шаги 9-10. Нахождение минимума в Θ и проверка ограниченности целевой функции
         theta_0 = min(theta)
         if theta_0 == inf:
             print('Target function is not limited!')
             return None
 
-        # Преобразование базисного допустимого плана
+        # Шаги 11-13. Преобразование базисного допустимого плана
         k = np.argmin(theta)
         j_star = B[k]
         B[k] = j0
