@@ -38,7 +38,7 @@ def simplex_method(c, A, x, B):
 
         # Шаги 3-4. Находим векторы потенциалов и оценок
         u_t = np.dot(c_b, A_b_inv)
-        delta = np.dot(u_t, A) - c;
+        delta = np.dot(u_t, A) - c
 
         # Шаг 5. Проверка текущего плана на оптимальность
         neg_delta, j0 = None, None
