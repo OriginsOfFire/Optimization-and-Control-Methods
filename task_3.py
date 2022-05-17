@@ -3,12 +3,6 @@ import numpy as np
 from task_2 import simplex_method, get_basis_matrix
 
 
-c = np.array([1, 0, 0])
-A = np.array([[1, 1, 1], 
-             [2, 2, 2]])
-b = np.array([0, 0])
-
-
 def get_basis_plan(c, A, b):
     # Шаг 1. Преобразование задачи для соблюдения неотрицательности
     for index, elem in enumerate(b):
@@ -23,7 +17,7 @@ def get_basis_plan(c, A, b):
     c_dashed = np.array([0 if i < n else -1 for i in range(n + m)])
     a_dashed = np.append(A, np.eye(2), axis=1)
 
-    # Шаг 3. Построим начальный базисный допустимы план
+    # Шаг 3. Построим начальный базисный допустимый план
     x_dashed = np.append(np.array([0 for _ in range(n)]), b)
     B = np.array([n + i for i in range(m)])
 
@@ -31,13 +25,12 @@ def get_basis_plan(c, A, b):
     x, B = simplex_method(c_dashed, a_dashed, x_dashed, B)
     a_tran = a_dashed.transpose()
     a_basis_inv = np.linalg.inv(get_basis_matrix(a_dashed, a_tran, B))
-    print(a_basis_inv)
 
     # Шаг 5. Проверка условия совместности
     for i in range(m):
         if x[n + i] != 0:
             print("The problem is not joint!")
-            return None
+            return None, None
 
     # Шаг 6. Формируем допустимый план задачи
     x = x[:n]
@@ -45,7 +38,6 @@ def get_basis_plan(c, A, b):
         # Шаг 7. Проверка допустимости текущего базисного плана   
         basis = [j <= n for j in B]
         if all(basis):
-            print('B is good basis plan')
             return x, B
 
         # Шаг 8. Находим максимальный индекс искусственной переменной

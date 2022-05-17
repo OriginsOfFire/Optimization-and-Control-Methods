@@ -29,8 +29,7 @@ def dual_simplex_method(c, A, b, B):
             if elem < 0:
                 break
         else:
-            print(f'{K} is the optimal plan')
-            exit(0)
+            return K, B
 
         # Шаг 6. Находим отрицательную компоненту псевдоплана 
         j_k = np.argmin(K)
@@ -50,7 +49,7 @@ def dual_simplex_method(c, A, b, B):
         check = [el >= 0 for el in mu.values()]
         if all(check):
             print('The direct problem is not joint!')
-            exit(0)
+            return None, None
 
         # Шаг 9. Находим σ для каждого небазисного индекса, для которого μ отрицательно
         sigma = []

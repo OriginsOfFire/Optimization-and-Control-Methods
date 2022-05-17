@@ -65,7 +65,7 @@ def simplex_method(c, A, x, B):
         theta_0 = min(theta)
         if theta_0 == inf:
             print('Target function is not limited!')
-            return None
+            return None, None
 
         # Шаги 11-13. Преобразование базисного допустимого плана
         k = np.argmin(theta)
